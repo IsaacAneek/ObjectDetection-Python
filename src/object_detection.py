@@ -2,12 +2,13 @@ import cv2
 import cvlib as cv
 from cvlib.object_detection import draw_bbox
 
-vid = cv2.VideoCapture(1) #use 0 to use the default webcam, 1 to use any other alternative webcam
+vid = cv2.VideoCapture(1) #use 0 to use the default webcam, 1 to use the alternative one
 
-roi_x, roi_y, roi_w, roi_h = 320, 240, 5, 5 #The position and shape of our Region Of Interest(ROI)
+roi_x, roi_y, roi_w, roi_h = 320, 240, 25, 25 #The position and shape of our Region Of Interest(ROI)
 
 while True:
     ret, frame = vid.read()
+    
     bbox, label, conf = cv.detect_common_objects(frame,.1, model='yolov3-tiny')
     #label is the list that contains the name of detected objects
     
@@ -20,10 +21,10 @@ while True:
             state = "ROI"
         else:
             state = "Default"
-            #If the detected object's coordinate fall under our region of interest than specify the state
+            #If the detected object's coordinate fall around our region of interest than specify the state as ROI
             
         detected_objects = {"label":label[i],"conf":conf[i], "box":(x,y,w,h), "state":state}
-        #This is a dictionary that stores the relevant info of the detected object
+        #This is a dictionary that stores the relevant info of a detected object
         all_objects.append(detected_objects)
     
     for obj in all_objects:
@@ -39,6 +40,9 @@ while True:
     
     for obj in all_objects:
         print("%s detected with conf level %f and state %s" %(obj["label"],obj["conf"],obj["state"]))
+        
+        if(obj["state"] == "ROI"):
+            message = "%s" % (obj["label"]) #this message will be sent to the esp32 or arduino module
     
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
