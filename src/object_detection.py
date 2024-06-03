@@ -2,7 +2,7 @@ import cv2
 import cvlib as cv
 from cvlib.object_detection import draw_bbox
 
-vid = cv2.VideoCapture(1) 
+vid = cv2.VideoCapture(1) #use 0 to use the default webcam, 1 to use any other alternative webcam
 
 roi_x, roi_y, roi_w, roi_h = 320, 240, 5, 5 #The position and shape of our Region Of Interest(ROI)
 
